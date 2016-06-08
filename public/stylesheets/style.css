@@ -1,0 +1,7 @@
+body {padding:50px; font:14px "Lucida Grande", Helvetica, Arial, sans-serif;}
+
+a {color:#00B7FF; cursor:pointer;}
+
+.hidden {display:none !important;}
+#popup {z-index:1000; position:fixed; padding:50px; border:1px solid #333; background:#fff;}
+.shadowbox {z-index:999; position:fixed; width:100%; height:100%; display:block; opacity:.5; background:#333; top:0; left:0;}
