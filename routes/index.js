@@ -4,7 +4,9 @@ var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 var cbase = require('couchbase');
 var cluster = new cbase.Cluster('couchbase://127.0.0.1');
-var bucket = cluster.openBucket('warmahordes');
+// todo - config setting update here.
+var couchbaseBucketName = 'default'; // reset to the databucket you'd like to use
+var bucket = cluster.openBucket(couchbaseBucketName);
 var db = require('../db');
 
 // Configure the local strategy for use by Passport.
@@ -46,15 +48,16 @@ passport.deserializeUser(function(id, cb) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-        res.render('index', { title: 'Express', user: req.user });
+        res.render('index', { title: 'Passport - Express - Couchbase - User login template', user: req.user });
     });
 
 router.get('/login', function(req, res){
-        res.render('login');
+        //res.render('login');
+        res.render('index', { title: 'Passport - Express - Couchbase - User login template', user: req.user });
     });
 
 router.post('/login',
-    passport.authenticate('local', { failureRedirect: '/login' }),
+    passport.authenticate('local', { failureRedirect: '/' }),
     function(req, res) {
         res.redirect('/');
     });
@@ -62,6 +65,20 @@ router.post('/login',
 router.get('/logout',
     function(req, res){
         req.logout();
+        res.redirect('/');
+    });
+
+router.post('/register',
+    function(req, res){
+        var register = require('../db/cb_register');
+        var user = {
+            'username': req.query.username,
+            'email': req.query.email,
+            'password': req.query.password
+        };
+
+        register.newUser(user);
+        //res.render('index', { title: 'Passport - Express - Couchbase - User login template', user: req.user });
         res.redirect('/');
     });
 
